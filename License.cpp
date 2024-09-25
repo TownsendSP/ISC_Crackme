@@ -147,7 +147,7 @@ int License::checkFormat() {
      */
     //Check base64 encoding with regex
     vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
-    if(!b64Check(inputLicense)) {
+    if (!b64Check(inputLicense)) {
         return 1;
     }
     //base64decode
