@@ -38,21 +38,18 @@ static std::string b64_decode(const std::string &in) {
     return out;
 }
 
-bool License::isValidSecretNumber(long int number) {
-    bool sizecheck = std::to_string(number).length() >= 13;
+bool License::isValidSecretNumber(std::string secretNumber) {
+    bool sizecheck = secretNumber.length() >= 13;
     int sumep = 0;
-    std::string num1 = std::to_string(number);
-    for (int i1 = std::to_string(number).length() - 2; i1 >= 0; i1 -= 2) {
-        sumep += int(num1[i1] - '0') * 2 > 9 ? int(num1[i1] - '0') * 2 / 10 + int(num1[i1] - '0') * 2 % 10 :
-                 int(num1[i1] - '0') * 2;
+    for (int i1 = secretNumber.length() - 2; i1 >= 0; i1 -= 2) {
+        sumep += int(secretNumber[i1] - '0') * 2 > 9 ? int(secretNumber[i1] - '0') * 2 / 10 + int(secretNumber[i1] - '0') * 2 % 10 :
+                 int(secretNumber[i1] - '0') * 2;
     }
     int suma = sumep;
     int sumop = 0;
-    std::string num = std::to_string(number);
-    for (int i = std::to_string(number).length() - 1; i >= 0; i -= 2)
-        sumop += num[i] - '0';
+    for (int i = secretNumber.length() - 1; i >= 0; i -= 2)
+        sumop += secretNumber[i] - '0';
     int sumb = sumop;
-
     return sizecheck && ((suma + sumb) % 10 == 0);
 }
 
@@ -69,7 +66,7 @@ int License::isValidLicenseType(const std::string& licenseType) {
 }
 
 std::string License::getLicenseType(std::string licType) {
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
     try{
         return licenseTypes.at(licType);
     } catch (const std::out_of_range& e) {
@@ -87,7 +84,7 @@ std::string License::tostring() {
            + "Days Remaining: " + std::to_string(daysRemaining);
 }
 
-int License::checkNumber(long int number) {
+int License::checkNumber(std::string number) {
     if (isValidSecretNumber(number)) {
         return 0;
     } else {
@@ -96,7 +93,7 @@ int License::checkNumber(long int number) {
 }
 
 bool License::b64Check(std::string license) {
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
     //    Check base64 encoding with regex
     const std::regex base64Pattern("^([A-Za-z0-9+/]{4})*"
                                    "([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
@@ -121,7 +118,7 @@ int License::checkFormat(std::string inLicense) {
     std::string decoded = b64_decode(inLicense);
     //split by comma
     std::string delimiter = ",";
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
     std::vector<std::string> fields = splitString(decoded, ',');
     if(fields.size() != 5) {
         return 2;
@@ -144,7 +141,7 @@ int License::checkFormat() {
      * Fields will be separated by a comma, and base64 encoded
      */
     //Check base64 encoding with regex
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
     if (!b64Check(inputLicense)) {
         return 1;
     }
@@ -198,7 +195,7 @@ int License::validateLicense() {
     if (check != 0) {
         return check;
     }
-    check = checkNumber(std::stol(luhnNum));
+    check = checkNumber(luhnNum);
     if (check != 0) {
         return check;
     }
@@ -215,7 +212,7 @@ void License::wipeLicense() {
     email = "";
     licType = "";
     licStart = 0;
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
     licEnd = 0;
     luhnNum = "";
     isLicensed = false;
@@ -228,5 +225,5 @@ License::License(){
     licEnd = 0;
     luhnNum = "";
     isLicensed = false;
-    vv = checkNumber(65299639440221) == 0 && checkNumber(65299639440222) == 3 ? 1 : 0;
+    vv = checkNumber(std::to_string(65299639440221)) == 0 && checkNumber(std::to_string(65299639440222)) == 3 ? 1 : 0;
 }
