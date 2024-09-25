@@ -30,11 +30,14 @@ target_link_libraries(su_isc_crackme
 )
 
 if (WIN32)
-    add_custom_command(TARGET ${EXECUTABLE_NAME} PRE_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy
-            ${CMAKE_SOURCE_DIR}/isc_logo.ico
-            $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
-    )
+#    Add the icon to the executable
+    if(EXISTS "${CMAKE_SOURCE_DIR}/isc_logo.ico")
+        add_custom_command(TARGET ${EXECUTABLE_NAME} PRE_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/isc_logo.ico
+                $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
+        )
+    endif()
 
     add_custom_command(TARGET su_isc_crackme POST_BUILD
         COMMAND C:/Qt/6.7.2/mingw_64/bin/windeployqt.exe --release $<TARGET_FILE:su_isc_crackme>
