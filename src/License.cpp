@@ -5,7 +5,6 @@
 #include "License.h"
 #include <regex>
 #include <iomanip>
-#include <iostream>
 
 std::vector<std::string> splitString(const std::string &str, char delimiter) {
     std::vector<std::string> tokens;
@@ -79,7 +78,6 @@ std::string License::getLicenseType(std::string licType) {
 }
 
 std::string License::tostring() {
-    std::cout << "Test";
     if (!isLicensed) {
         return "UNLICENSED";
     }

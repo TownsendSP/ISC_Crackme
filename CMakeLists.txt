@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.28.1)
 project(su_isc_crackme)
+set(EXECUTABLE_NAME su_isc_crackme)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTOMOC ON)
@@ -18,11 +19,25 @@ find_package(
         REQUIRED)
 
 include_directories(${Qt6Widgets_INCLUDE_DIRS})
-add_executable(su_isc_crackme
+
+if(WIN32)
+    set(SOURCES ${SOURCES} app_icon.rc)
+add_executable(${EXECUTABLE_NAME} WIN32 ${SOURCES}
         src/main.cpp
         src/License.cpp
         src/License.h
 )
+endif()
+
+
+if (NOT (WIN32 OR APPLE))
+add_executable(${EXECUTABLE_NAME}
+        src/main.cpp
+        src/License.cpp
+        src/License.h
+)
+endif()
+
 target_link_libraries(su_isc_crackme
         Qt6::Core
         Qt6::Widgets
@@ -34,7 +49,7 @@ if (WIN32)
     if(EXISTS "${CMAKE_SOURCE_DIR}/isc_logo.ico")
         add_custom_command(TARGET ${EXECUTABLE_NAME} PRE_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/isc_logo.ico
+                ${CMAKE_SOURCE_DIR}/icon.ico
                 $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
         )
     endif()
