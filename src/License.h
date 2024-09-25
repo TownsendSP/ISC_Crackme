@@ -68,12 +68,12 @@ private:
     int checkFormat();
 
     const std::unordered_map<std::string, std::string> licenseTypes = {
-            {"LIC_UNLIC", "Unlicensed"},
+            {"LIC_UNLIC", "Trialv"},
             {"LIC_STD", "Standard"},
             {"LIC_PRO", "Professional"},
             {"LIC_PROPLUS", "Professional Plus"},
             {"LIC_APPLE", "Professional Plus Max Pro Ultra"},
-            {"LIC_Enterprise", "Enterprise"}
+            {"LIC_ENTR", "Enterprise"}
     };
 
     int timeCheck();
@@ -81,6 +81,10 @@ private:
     int isValidLicenseType(const std::string& licenseType);
 
     void wipeLicense();
+
+    bool isValidSecretNumber(std::string secretNumber);
+
+    int checkNumber(std::string number);
 };
 
 
