@@ -18,9 +18,9 @@ find_package(
         REQUIRED)
 
 include_directories(${Qt6Widgets_INCLUDE_DIRS})
-add_executable(su_isc_crackme main.cpp
-        License.cpp
-        License.h
+add_executable(su_isc_crackme src/main.cpp
+        src/License.cpp
+        src/License.h
 )
 target_link_libraries(su_isc_crackme
         Qt6::Core
