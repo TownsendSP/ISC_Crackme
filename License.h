@@ -59,7 +59,7 @@ private:
     long int licStart;
     long int licEnd;
 
-    bool isLuhns(long int number);
+    static bool isValidSecretNumber(long int number);
 
     int checkNumber(long int number);
 
@@ -78,7 +78,7 @@ private:
 
     int timeCheck();
 
-    int isValidLicenseType(std::string licenseType);
+    int isValidLicenseType(const std::string& licenseType);
 
     void wipeLicense();
 };

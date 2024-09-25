@@ -47,7 +47,7 @@ int call_license_validation(const std::string& text) {
     int status = 0;
     lic.importLicense(text);
     int validationStatus = lic.validateLicense();
-    if (lic.vv == 1) {
+    if (lic.vv == 0) {
         cheers();
         status++;
     }
