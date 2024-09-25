@@ -29,7 +29,6 @@ target_link_libraries(su_isc_crackme
 )
 
 if (WIN32)
-    # Use windeployqt to bundle necessary Qt DLLs and dependencies
     add_custom_command(TARGET su_isc_crackme POST_BUILD
         COMMAND C:/Qt/6.7.2/mingw_64/bin/windeployqt.exe --release $<TARGET_FILE:su_isc_crackme>
         COMMENT "Running windeployqt to bundle Qt dependencies")
