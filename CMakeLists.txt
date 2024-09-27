@@ -11,6 +11,7 @@ if (WIN32)
 endif()
 
 if (APPLE)
+    set(CMAKE_PREFIX_PATH "/usr/local/opt/qt@5")
     find_package(
             Qt5 COMPONENTS
             Core
@@ -18,6 +19,7 @@ if (APPLE)
             Gui
             REQUIRED)
     include_directories(${Qt5Widgets_INCLUDE_DIRS})
+    include(BundleUtilities)
 else()
     find_package(
             Qt6 COMPONENTS
@@ -40,6 +42,7 @@ if (APPLE)
             Qt5::Widgets
             Qt5::Gui
     )
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES ICON isc_logo.icns)
 else ()
     target_link_libraries(su_isc_crackme
             Qt6::Core
