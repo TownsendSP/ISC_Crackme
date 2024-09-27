@@ -10,24 +10,43 @@ if (WIN32)
     set(CMAKE_PREFIX_PATH "C:\\Qt\\6.7.2\\mingw_64")
 endif()
 
-find_package(
-        Qt6 COMPONENTS
-        Core
-        Widgets
-        Gui
-        REQUIRED)
+if (APPLE)
+    find_package(
+            Qt5 COMPONENTS
+            Core
+            Widgets
+            Gui
+            REQUIRED)
+    include_directories(${Qt5Widgets_INCLUDE_DIRS})
+else()
+    find_package(
+            Qt6 COMPONENTS
+            Core
+            Widgets
+            Gui
+            REQUIRED)
+    include_directories(${Qt6Widgets_INCLUDE_DIRS})
+endif()
 
-include_directories(${Qt6Widgets_INCLUDE_DIRS})
 add_executable(su_isc_crackme
         src/main.cpp
         src/License.cpp
         src/License.h
 )
-target_link_libraries(su_isc_crackme
-        Qt6::Core
-        Qt6::Widgets
-        Qt6::Gui
-)
+
+if (APPLE)
+    target_link_libraries(su_isc_crackme
+            Qt5::Core
+            Qt5::Widgets
+            Qt5::Gui
+    )
+else ()
+    target_link_libraries(su_isc_crackme
+            Qt6::Core
+            Qt6::Widgets
+            Qt6::Gui
+    )
+endif()
 
 if (WIN32)
 #    Add the icon to the executable
