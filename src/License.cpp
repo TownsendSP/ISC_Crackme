@@ -5,6 +5,8 @@
 #include "License.h"
 #include <regex>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 
 std::vector<std::string> splitString(const std::string &str, char delimiter) {
     std::vector<std::string> tokens;

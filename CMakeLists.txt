@@ -13,31 +13,57 @@ if (WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 endif()
 
-find_package(
-        Qt5 COMPONENTS
-        Core
-        Widgets
-        Gui
-        REQUIRED)
-
-include_directories(${Qt6Widgets_INCLUDE_DIRS})
-
-if(WIN32)
-    set(SOURCES ${SOURCES} app_icon.rc)
-add_executable(${EXECUTABLE_NAME} WIN32 ${SOURCES}
-        src/main.cpp
-        src/License.cpp
-        src/License.h
-)
+if (APPLE)
+    set(CMAKE_PREFIX_PATH "/usr/local/opt/qt@5")
+    find_package(
+            Qt5 COMPONENTS
+            Core
+            Widgets
+            Gui
+            REQUIRED)
+    include_directories(${Qt5Widgets_INCLUDE_DIRS})
+    include(BundleUtilities)
+else()
+    find_package(
+            Qt5 COMPONENTS
+            Core
+            Widgets
+            Gui
+            REQUIRED)
+    include_directories(${Qt5Widgets_INCLUDE_DIRS})
 endif()
 
 
-if (NOT (WIN32 OR APPLE))
-add_executable(${EXECUTABLE_NAME}
+if(WIN32)
+    set(SOURCES ${SOURCES} app_icon.rc)
+    add_executable(${EXECUTABLE_NAME} WIN32 ${SOURCES}
+            src/main.cpp
+            src/License.cpp
+            src/License.h
+    )
+endif()
+
+
+add_executable(su_isc_crackme
         src/main.cpp
         src/License.cpp
         src/License.h
 )
+
+if (APPLE)
+    target_link_libraries(su_isc_crackme
+            Qt5::Core
+            Qt5::Widgets
+            Qt5::Gui
+    )
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES ICON isc_logo.icns)
+else ()
+    target_link_libraries(su_isc_crackme
+            Qt5::Core
+            Qt5::Widgets
+            Qt5::Gui
+    )
+endif()
 endif()
 
 target_link_libraries(su_isc_crackme
@@ -51,7 +77,7 @@ if (WIN32)
     if(EXISTS "${CMAKE_SOURCE_DIR}/isc_logo.ico")
         add_custom_command(TARGET ${EXECUTABLE_NAME} PRE_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/icon.ico
+                ${CMAKE_SOURCE_DIR}/isc_logo.ico
                 $<TARGET_FILE_DIR:${EXECUTABLE_NAME}>
         )
     endif()
