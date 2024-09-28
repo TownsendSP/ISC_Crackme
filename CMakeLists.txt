@@ -8,11 +8,13 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 if (WIN32)
-    set(CMAKE_PREFIX_PATH "C:\\Qt\\6.7.2\\mingw_64")
+    set(CMAKE_PREFIX_PATH "C:\\Qt\\5.15.14\\mingw_64")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -static")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 endif()
 
 find_package(
-        Qt6 COMPONENTS
+        Qt5 COMPONENTS
         Core
         Widgets
         Gui
@@ -39,9 +41,9 @@ add_executable(${EXECUTABLE_NAME}
 endif()
 
 target_link_libraries(su_isc_crackme
-        Qt6::Core
-        Qt6::Widgets
-        Qt6::Gui
+        Qt5::Core
+        Qt5::Widgets
+        Qt5::Gui
 )
 
 if (WIN32)
@@ -54,7 +56,7 @@ if (WIN32)
         )
     endif()
 
-    add_custom_command(TARGET su_isc_crackme POST_BUILD
-        COMMAND C:/Qt/6.7.2/mingw_64/bin/windeployqt.exe --release $<TARGET_FILE:su_isc_crackme>
-        COMMENT "Running windeployqt to bundle Qt dependencies")
+#    add_custom_command(TARGET su_isc_crackme POST_BUILD
+#        COMMAND C:/Qt/6.7.2/mingw_64/bin/windeployqt.exe --release $<TARGET_FILE:su_isc_crackme>
+#        COMMENT "Running windeployqt to bundle Qt dependencies")
 endif()
