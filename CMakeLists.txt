@@ -64,7 +64,7 @@ else ()
             Qt5::Gui
     )
 endif()
-endif()
+
 
 target_link_libraries(su_isc_crackme
         Qt5::Core
