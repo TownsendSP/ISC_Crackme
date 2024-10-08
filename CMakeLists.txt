@@ -13,6 +13,7 @@ if (WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static")
 endif()
 
+
 if (APPLE)
     set(CMAKE_PREFIX_PATH "/usr/local/opt/qt@5")
     find_package(
@@ -22,7 +23,6 @@ if (APPLE)
             Gui
             REQUIRED)
     include_directories(${Qt5Widgets_INCLUDE_DIRS})
-    include(BundleUtilities)
 else()
     find_package(
             Qt5 COMPONENTS
@@ -41,6 +41,7 @@ if(WIN32)
             src/License.cpp
             src/License.h
     )
+
 endif()
 
 
