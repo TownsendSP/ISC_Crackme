@@ -102,7 +102,6 @@ block name and selecting "Rename".
 Regex #2 sill match any string consisting of a series of alphanumeric characters, followed by an `@` symbol, followed by
 another series of alphanumeric characters, and ending with a `.` followed by another series of alphanumeric characters.
 Therefore, this regex is likely meant to match any email addresses, and can be renamed as such.
-I will also rename the comma string to "comma" for clarity.
 
 At this point, the string table should look like this:
 ![img_1.png](imgs/img_1.png)
@@ -117,6 +116,7 @@ By searching 'license' in the Symbols panel, we will have a list of matching fun
 
 We can look at the function `License::checkFormat(std::string)` by double-clicking the function name in the symbols
 list.
+
 Near the top of the function, we can see that it calls `License::b64Check(std::string)`, then xors the result with 1.
 Therefore, if the base64 check succeeds, then the variable will be set to 0.
 I will rename this variable to `b64CheckResult` for clarity. Also, arg2 should be renamed to 'inputString'.
@@ -124,7 +124,7 @@ I will rename this variable to `b64CheckResult` for clarity. Also, arg2 should b
 The `License::checkFormat(std::string)` function should look like this now:
 ![img.png](imgs/renamedVariables.png)
 
-###### Base64 Check
+### Base64 Check
 
 We can look at `License::b64Check(std::string)` by double-clicking the function name in the symbols list.
 
@@ -136,7 +136,7 @@ expression. We can select the regular expression, `"^([A-Za-z0-9+/]{4})*([A-Za-z
 that the regex is the string we renamed to `base64regex` earlier.
 Now we know for a fact that this function is checking if a string is a base64 string.
 
-#### Back to `License::checkFormat(std::string)`
+### Back to `License::checkFormat(std::string)`
 
 Returning to `License::checkFormat(std::string)`, we can see that the function enters an if statement
 `if (b64CheckResult == 0)`, which we know means that the base64 check succeeded.
@@ -172,24 +172,25 @@ strings in the output is not 5.
 ![img.png](imgs/lengthcheck.png)
 In the screenshot, the variable rax_8 will be 1 if the length of the list `splitStringOutput` is not 5, and 0 if the
 length is 5.
+
 **Therefore, we can be sure that there are 5 fields in our valid license**
 
 If the length check succeeds (if rax_8 is 0), the function will execute a regular expression check on the first element
 of the split string:
 
 ```c
-0040ac3e    if (rax_8 == 0)
-0040ac3e    {
-0040ac60        void var_128;
-0040ac60        std::basic_regex<char, std::regex_traits<char> >::basic_regex(&var_128, "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]…", 0x10);
-0040ac60        
-0040ac98        if (std::regex_match<std::ch...har>, char, std::regex_traits<char> >(std::vector<std::string>::operator[](&splitStringOutput, 0), &var_128, 0) == 1)
-0040aca1            rbx_1 = 0;
-0040ac98        else
-0040ac9a            rbx_1 = 4;
-0040ac9a        
-0040acb0        std::basic_regex<char, std::regex_traits<char> >::~basic_regex(&var_128);
-0040ac3e    }
+if (rax_8 == 0)
+{
+    void var_128;
+    std::basic_regex<char, std::regex_traits<char> >::basic_regex(&var_128, "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]…", 0x10);
+    
+    if (std::regex_match<std::ch...har>, char, std::regex_traits<char> >(std::vector<std::string>::operator[](&splitStringOutput, 0), &var_128, 0) == 1)
+        rbx_1 = 0;
+    else
+        rbx_1 = 4;
+    
+    std::basic_regex<char, std::regex_traits<char> >::~basic_regex(&var_128);
+}
 ```
 
 While it looks complex, it can be simplified relatively easily. Lines 0040ac60 are creating a regex object that checks
@@ -207,10 +208,11 @@ succeed. Therefore, we can assume that 0 is returned if checkFormat succeeds.
 
 ###### What we have learned so far:
 
-There are 5 elements in the license: Email, Secret Number, Start Date, Expiration Date, and License Type.
-The License is base64 encoded
-The fields are separated by a comma
-Email is the first field of the license
+There are 5 elements in the license: Email, Start Date, Expiration Date, Secret Number, and License Type.
+
+- The License is base64 encoded
+- The fields are separated by a comma
+- Email is the first field of the license
 
 ### Finding the rest of the fields
 
@@ -287,6 +289,7 @@ All that remains to figure out is:
 
 When reversing the `License::checkFormat` function, we saw that the function would return 0 if it succeeded, and 4 if
 the email check failed.
+
 It may be useful to find other error codes to try and figure out the missing fields of the license.
 By returning to the string search for one of the error messages, clicking on one of the strings, for example, "Invalid
 secret number", we can view the cross-references to that string.
@@ -350,13 +353,16 @@ Using those error codes, we can can infer that the function is checking if the c
 dates of the license. If the current time is before the start date, it will return 5, if it is after the end date, it
 will return 6, and if the current time is between the start and end dates, it will return 0. If the start date is after
 the end date, it will return 7.
+
 Because of the data types used, we know that the dates are saved as unix timestamps in the license, and that the start
 date is the first number, and the end date is the second number.
 
 ###### What we have learned so far:
 
 The license is base64 encoded, with the 5 fields separated by commas.
+
 The dates are unix timestamps
+
 The discovered fields are as follows:
 
 1. Email
@@ -420,11 +426,14 @@ There are only 2 possible return values from this function: 3 and 0. Looking bac
 
 This function is likely actually in charge of checking the secret number, and is much simpler than the
 `License::isValidSecretNumber` function
+
 Still, the function calls `License::isValidSecretNumber` with the secret number as an argument, so that function is
 still needed.
+
 However, we can patch the function to not check the output of `isValidSecretNumber` and always return 0.
 To do this, we will select the entire function but the return statement, right-click, and select "Patch Function",
 then "Convert to NOP"
+
 NOP stands for No Operation, and is an assembly instruction that does nothing. By converting the function to NOP, we are
 effectively disabling the function, ensuring that it will always return 0.
 
@@ -444,6 +453,7 @@ appears.
 
 We could start by assuming that the license type is a string, and return to the string table section in Binary Ninja by
 searching again for any of the error messages in the strings menu.
+
 Returning to the strings table beneath the error messages, we see strings such as, "Professional", "Standard", and "
 Trial". These are likely the possible license types. Using the same strategy as was used to construct the error code
 table, we can also construct a table of license codes and types by selecting a license, then using the Cross References
@@ -471,8 +481,11 @@ Now that we have the license types, we can construct a license with the license 
 We still don't know where the license type and the secret number are in the license but we can simply construct 2 licenses, one with the license type in the first unknown spot, and one with the license type in the second unknown spot.
 
 Known Fields: `email,unknown_string,start_date,expiration_date,unknown_string`
+
 Attempts: `email,license_type,start_date,expiration_date,secret_number` and `email,secret_number,start_date,expiration_date,license_type`
+
 Examples: `test@test.test,LIC_UNLIC,1694245945,1883634745,qwertyuiop`, and `test@test.test,qwertyuiop,1694245945,1883634745,LIC_UNLIC`
+
 
 Using CyberChef to base64 encode each of the licenses, we can try each of them in the program to see if they are accepted as valid licenses
 
