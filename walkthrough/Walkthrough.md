@@ -31,8 +31,8 @@ disassembly easier to read.
 The function names can be seen in the left top panel, under "Symbols", and the strings can be found by clicking on the
 double-quote icon in the column to the right of the disassembly view.
 
-_Note: Details in the screenshots will be different on different builds of the program. The view in the screenshots is
-the Linux build of the program_
+> Note: Details in the screenshots will be different on different builds of the program. The view in the screenshots is
+> the Linux build of the program
 
 #### Strings: The low-hanging fruit
 
@@ -149,9 +149,10 @@ The first code executed inside the if statement is:
 ```
 
 This snippet base64 decodes `inputString` and stores the result in `var_c8`, which will be renamed to `decodedString`.
-_Note: the structure of assigning a variable of void type and immediately calling a function with that as the argument
-is a common way of passing a reference to a variable. The called function will then set its result to that variable
-passed in._
+
+> Note: the structure of assigning a variable of void type and immediately calling a function with that as the argument
+> is a common way of passing a reference to a variable. The called function will then set its result to that variable
+> passed in.
 
 Scrolling down towards the bottom of the function to find the next usage of `decodedString`, we can see that it is
 passed to a function `splitString`
